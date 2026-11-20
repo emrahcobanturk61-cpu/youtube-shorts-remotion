@@ -254,11 +254,13 @@ const Scene: React.FC<{
   );
 };
 
-export const EgitimVideo: React.FC = () => {
-  // Shorts için: 15 saniye (450 kare) ile 60 saniye (1800 kare) arasında seçebilirsiniz
-  // Varsayılan: 90 saniye (2700 kare) yerine shorter süre
-  const durationInFrames = 450; // 15 seconds at 30 FPS
+// Her sahne 112 kare = ~3.7 saniye (30 FPS)
+export const SCENE_DURATION = 112;
 
+// 4 sahne x 112 kare = 448 kare = ~14.9 saniye
+export const TOTAL_DURATION = SCENE_DURATION * scenes.length;
+
+export const EgitimVideo: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
@@ -268,8 +270,8 @@ export const EgitimVideo: React.FC = () => {
       {scenes.map((scene, index) => (
         <Sequence
           key={scene.number}
-          from={index * 112} // Shorts için daha sık scene değişikliği
-          durationInFrames={112}
+          from={index * SCENE_DURATION}
+          durationInFrames={SCENE_DURATION}
         >
           <Scene {...scene} />
         </Sequence>

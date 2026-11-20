@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+.npm/
+
+# remotion output
+out/
+build/
+
+# misc
+.DS_Store
+*.log
+.env
+.env.local
