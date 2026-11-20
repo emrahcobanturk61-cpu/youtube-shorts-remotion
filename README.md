@@ -19,19 +19,31 @@ Dikey (1080x1920) YouTube Shorts videosu üretmek için hazır Remotion projesi.
 ## Video üretme
 
 ```bash
-npm run render     # out/egitim-shorts.mp4
-npm run still      # out/cover.png (kapak karesi)
+npm run render        # EgitimVideoShorts -> out/egitim-shorts.mp4
+npm run render:ornek  # OrnekVideo (public/ornek-video.mp4) -> out/ornek-video.mp4
+npm run still         # out/cover.png (kapak karesi)
 ```
 
 İlk render'da Remotion Chromium'u indirir, birkaç dakika sürebilir.
+
+**Telefonda hemen izlemek için:** `preview.html` dosyasını tarayıcıda aç — Remotion
+kompozisyonunun aynı tasarımla çalışan canlı önizlemesidir (kurulum gerekmez).
+
+**Bulutta render:** GitHub'da **Actions → Render Shorts → Run workflow**.
+Bitince `shorts-videolari` artifact'ından MP4'leri indirebilirsin.
 
 ## Proje yapısı
 
 ```
 src/
   index.ts        # Remotion giriş noktası (registerRoot)
-  Root.tsx        # Kompozisyon tanımı (1080x1920, 30 FPS)
+  Root.tsx        # Kompozisyon tanımları (EgitimVideoShorts, OrnekVideo)
   Composition.tsx # Sahneler, animasyonlar, renkler
+  OrnekVideo.tsx  # Örnek videoyu dikey çerçevede gösterir
+public/
+  ornek-video.mp4 # Bağlanan örnek video
+preview.html      # Tarayıcıda çalışan canlı önizleme
+.github/workflows/render.yml
 remotion.config.ts
 .devcontainer/    # Codespaces ortamı (Node 22)
 ```

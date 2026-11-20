@@ -26,6 +26,7 @@
   "scripts": {
     "dev": "remotion studio src/index.ts --port=3000",
     "render": "remotion render src/index.ts EgitimVideoShorts out/egitim-shorts.mp4",
+    "render:ornek": "remotion render src/index.ts OrnekVideo out/ornek-video.mp4",
     "still": "remotion still src/index.ts EgitimVideoShorts out/cover.png --frame=30",
     "typecheck": "tsc",
     "upgrade": "remotion upgrade"

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Shorts Önizleme — EgitimVideoShorts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: #050b14;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+  }
+  body { display: flex; align-items: center; justify-content: center; }
+
+  /* 1080x1920 kompozisyon, ekrana sığdırılmış */
+  #stage {
+    position: relative;
+    width: min(100vw, calc(100vh * 9 / 16));
+    height: min(100vh, calc(100vw * 16 / 9));
+    background: #081426;
+    overflow: hidden;
+  }
+
+  #bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, #172D49 0%, #081426 70%);
+  }
+
+  .ring {
+    position: absolute; left: 50%; top: 50%;
+    width: 40%; aspect-ratio: 1; border-radius: 50%;
+    translate: -50% -50%;
+    border: 1px solid rgba(255,146,46,0.15);
+    transform: scale(0.85);
+  }
+  .ring.two { border-color: rgba(255,255,255,0.05); transform: scale(1); }
+
+  #content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 4%;
+    z-index: 2;
+  }
+
+  #step {
+    color: #FF922E;
+    font-size: clamp(10px, 2.1vmin, 24px);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    margin-bottom: 2.5vmin;
+    opacity: 0; transform: scale(0.6);
+  }
+  #title {
+    color: #fff;
+    font-size: clamp(24px, 8.2vmin, 92px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    max-width: 80%;
+    opacity: 0; transform: translateY(8vmin);
+  }
+  #title .dot { color: #FF922E; }
+  #desc {
+    color: #A8B7CC;
+    font-size: clamp(11px, 2.5vmin, 28px);
+    margin-top: 2.2vmin;
+    max-width: 78%;
+    opacity: 0;
+  }
+  #line {
+    width: 7vmin; height: 0.45vmin; min-height: 3px;
+    background: #FF922E; border-radius: 8px;
+    margin-top: 3.4vmin;
+    transform: scaleX(0);
+  }
+
+  #brand {
+    position: absolute; top: 4.5%; left: 5.5%;
+    color: #A8B7CC;
+    font-size: clamp(7px, 1.4vmin, 16px);
+    font-weight: 600; letter-spacing: 0.18em;
+    z-index: 3;
+  }
+
+  #dots {
+    position: absolute; bottom: 4%; left: 0; right: 0;
+    display: flex; gap: 1vmin; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  #dots span {
+    height: 0.45vmin; min-height: 3px; width: 2.6vmin;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    transition: width .3s ease, background .3s ease;
+  }
+  #dots span.active { width: 6.5vmin; background: #FF922E; }
+
+  /* giriş animasyonları */
+  .play #step  { animation: pop .5s cubic-bezier(.2,.9,.3,1.2) forwards; }
+  .play #title { animation: rise .7s cubic-bezier(.2,.9,.3,1) forwards; }
+  .play #desc  { animation: fade .5s .35s ease forwards; }
+  .play #line  { animation: grow .5s .3s ease forwards; }
+  .play .ring  { animation: ringIn .8s ease forwards; }
+
+  @keyframes pop  { to { opacity: 1; transform: scale(1); } }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fade { to { opacity: 1; } }
+  @keyframes grow { to { transform: scaleX(1); } }
+  @keyframes ringIn { from { transform: scale(0.85); } to { transform: scale(1); } }
+
+  #hud {
+    position: fixed; bottom: 6px; left: 0; right: 0;
+    text-align: center; color: #44546b;
+    font-size: 11px; letter-spacing: .08em;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div id="bg"></div>
+    <div class="ring"></div>
+    <div class="ring two"></div>
+    <div id="brand">CREATE YOUR FUTURE</div>
+    <div id="content" class="play">
+      <div id="step">01 / 04 — FİKİR</div>
+      <div id="title">Fikrini Yaz<span class="dot">.</span></div>
+      <div id="desc">Hayalindeki projeyi anlat.</div>
+      <div id="line"></div>
+    </div>
+    <div id="dots"></div>
+  </div>
+  <div id="hud">1080 × 1920 · 30 FPS · gerçek Remotion çıktısının önizlemesi</div>
+
+<script>
+  const scenes = [
+    { number: "01", title: "Fikrini Yaz", desc: "Hayalindeki projeyi anlat.", accent: "FİKİR" },
+    { number: "02", title: "Kodunu Oluştur", desc: "Fikrini çalışan bir projeye dönüştür.", accent: "KOD" },
+    { number: "03", title: "Videonu Üret", desc: "Projenin sonucunu videoya dönüştür.", accent: "VİDEO" },
+    { number: "04", title: "Abone Ol", desc: "Daha fazla ipucu için abone ol.", accent: "KANAL" },
+  ];
+
+  const stepEl = document.getElementById("step");
+  const titleEl = document.getElementById("title");
+  const descEl = document.getElementById("desc");
+  const content = document.getElementById("content");
+  const dots = document.getElementById("dots");
+
+  scenes.forEach(() => dots.appendChild(document.createElement("span")));
+  const dotEls = [...dots.children];
+
+  let i = 0;
+  function show(index) {
+    const s = scenes[index];
+    stepEl.textContent = `${s.number} / 04 — ${s.accent}`;
+    titleEl.innerHTML = `${s.title}<span class="dot">.</span>`;
+    descEl.textContent = s.desc;
+    dotEls.forEach((d, n) => d.classList.toggle("active", n <= index));
+
+    content.classList.remove("play");
+    void content.offsetWidth; // animasyonu yeniden başlat
+    content.classList.add("play");
+  }
+
+  show(0);
+  // 112 kare @ 30 FPS = 3733 ms
+  setInterval(() => { i = (i + 1) % scenes.length; show(i); }, 3733);
+</script>
+</body>
+</html>
